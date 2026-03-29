@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Divine Impact — Governance Infrastructure for Autonomous AI Agents</title>
+<meta name="description" content="Production-tested governance frameworks, deployment kits, and operational guides for autonomous AI agents. Built by operators, not theorists.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --slate-950: #0a0f1a;
+    --slate-900: #111827;
+    --slate-800: #1e293b;
+    --slate-700: #334155;
+    --slate-600: #475569;
+    --slate-500: #64748b;
+    --slate-400: #94a3b8;
+    --slate-300: #cbd5e1;
+    --slate-200: #e2e8f0;
+    --slate-100: #f1f5f9;
+    --slate-50: #f8fafc;
+    --accent: #3b82f6;
+    --accent-dim: #2563eb;
+    --accent-glow: rgba(59, 130, 246, 0.15);
+    --amber: #f59e0b;
+    --green: #22c55e;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --font-mono: 'DM Mono', 'Menlo', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--slate-950);
+    color: var(--slate-300);
+    line-height: 1.7;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(10, 15, 26, 0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(51, 65, 85, 0.3);
+  }
+
+  .nav-brand {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--slate-100);
+    letter-spacing: -0.02em;
+  }
+
+  .nav-brand span { color: var(--accent); }
+
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
+
+  .nav-links a {
+    color: var(--slate-400);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--slate-100); }
+
+  .nav-cta {
+    background: var(--accent) !important;
+    color: #fff !important;
+    padding: 0.5rem 1.25rem;
+    border-radius: 6px;
+    font-weight: 600 !important;
+    transition: background 0.2s !important;
+  }
+
+  .nav-cta:hover { background: var(--accent-dim) !important; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 2rem 4rem;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .hero-tag {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .hero-tag::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .hero h1 {
+    font-size: clamp(2.5rem, 5.5vw, 4rem);
+    font-weight: 700;
+    color: var(--slate-50);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 1.2rem;
+    color: var(--slate-400);
+    max-width: 620px;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--accent);
+    color: #fff;
+    padding: 0.875rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background 0.2s, transform 0.15s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover { background: var(--accent-dim); transform: translateY(-1px); }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent;
+    color: var(--slate-300);
+    padding: 0.875rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    border: 1px solid var(--slate-700);
+    transition: border-color 0.2s, color 0.2s;
+    cursor: pointer;
+  }
+
+  .btn-secondary:hover { border-color: var(--slate-500); color: var(--slate-100); }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 6rem 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-weight: 700;
+    color: var(--slate-50);
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .section-desc {
+    font-size: 1.05rem;
+    color: var(--slate-400);
+    max-width: 600px;
+    margin-bottom: 3rem;
+  }
+
+  /* ── WHAT WE DO ── */
+  .offerings {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .offering-card {
+    background: var(--slate-900);
+    border: 1px solid var(--slate-800);
+    border-radius: 12px;
+    padding: 2rem;
+    transition: border-color 0.3s, transform 0.2s;
+  }
+
+  .offering-card:hover {
+    border-color: var(--slate-600);
+    transform: translateY(-2px);
+  }
+
+  .offering-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    font-size: 1.25rem;
+  }
+
+  .offering-icon.blue { background: var(--accent-glow); color: var(--accent); }
+  .offering-icon.amber { background: rgba(245, 158, 11, 0.15); color: var(--amber); }
+  .offering-icon.green { background: rgba(34, 197, 94, 0.15); color: var(--green); }
+
+  .offering-card h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--slate-100);
+    margin-bottom: 0.75rem;
+  }
+
+  .offering-card p {
+    font-size: 0.925rem;
+    color: var(--slate-400);
+    line-height: 1.65;
+  }
+
+  /* ── PRODUCT FEATURE ── */
+  .product-feature {
+    background: var(--slate-900);
+    border: 1px solid var(--slate-800);
+    border-radius: 16px;
+    padding: 3rem;
+    margin-top: 3rem;
+  }
+
+  .product-feature h3 {
+    font-size: 1.5rem;
+    color: var(--slate-50);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .product-feature .price {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+  }
+
+  .product-feature p {
+    color: var(--slate-400);
+    margin-bottom: 1.5rem;
+    max-width: 600px;
+  }
+
+  .file-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .file-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+    color: var(--slate-300);
+    padding: 0.5rem 0;
+  }
+
+  .file-item::before {
+    content: '→';
+    color: var(--accent);
+    font-family: var(--font-mono);
+    flex-shrink: 0;
+    margin-top: 0.05rem;
+  }
+
+  /* ── PROOF / CREDIBILITY ── */
+  .proof-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .proof-item {
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .proof-number {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--slate-50);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .proof-label {
+    font-size: 0.85rem;
+    color: var(--slate-500);
+    line-height: 1.4;
+  }
+
+  /* ── ABOUT ── */
+  .about-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .about-text p {
+    margin-bottom: 1rem;
+    color: var(--slate-400);
+  }
+
+  .about-text p:first-child {
+    font-size: 1.1rem;
+    color: var(--slate-300);
+  }
+
+  .about-details {
+    background: var(--slate-900);
+    border: 1px solid var(--slate-800);
+    border-radius: 12px;
+    padding: 2rem;
+  }
+
+  .about-details h4 {
+    font-size: 0.85rem;
+    font-family: var(--font-mono);
+    color: var(--slate-500);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1rem;
+  }
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--slate-800);
+    font-size: 0.9rem;
+  }
+
+  .detail-row:last-child { border-bottom: none; }
+
+  .detail-label { color: var(--slate-500); }
+  .detail-value { color: var(--slate-200); font-weight: 500; }
+  .detail-value a { color: var(--accent); text-decoration: none; }
+  .detail-value a:hover { text-decoration: underline; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--slate-800);
+    padding: 3rem 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .footer-brand {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--slate-200);
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-brand span { color: var(--accent); }
+
+  .footer-tagline {
+    font-size: 0.875rem;
+    color: var(--slate-500);
+    line-height: 1.6;
+    max-width: 320px;
+  }
+
+  .footer-col h5 {
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--slate-500);
+    margin-bottom: 1rem;
+  }
+
+  .footer-col a {
+    display: block;
+    color: var(--slate-400);
+    text-decoration: none;
+    font-size: 0.875rem;
+    padding: 0.25rem 0;
+    transition: color 0.2s;
+  }
+
+  .footer-col a:hover { color: var(--slate-100); }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--slate-800);
+    font-size: 0.8rem;
+    color: var(--slate-600);
+  }
+
+  .footer-legal { display: flex; gap: 1.5rem; }
+
+  .footer-legal a {
+    color: var(--slate-500);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-legal a:hover { color: var(--slate-300); }
+
+  /* ── LEGAL PAGES (inline sections) ── */
+  .legal-section {
+    padding: 4rem 2rem;
+    max-width: 720px;
+    margin: 0 auto;
+    display: none;
+  }
+
+  .legal-section.active { display: block; }
+
+  .legal-section h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--slate-50);
+    margin-bottom: 0.5rem;
+  }
+
+  .legal-section .legal-updated {
+    font-size: 0.85rem;
+    color: var(--slate-500);
+    margin-bottom: 2rem;
+  }
+
+  .legal-section h3 {
+    font-size: 1.1rem;
+    color: var(--slate-200);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .legal-section p, .legal-section li {
+    font-size: 0.925rem;
+    color: var(--slate-400);
+    margin-bottom: 0.75rem;
+    line-height: 1.7;
+  }
+
+  .legal-section ul {
+    list-style: none;
+    padding-left: 1rem;
+  }
+
+  .legal-section ul li::before {
+    content: '·';
+    color: var(--slate-600);
+    font-weight: bold;
+    margin-right: 0.5rem;
+  }
+
+  .legal-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 2rem;
+  }
+
+  .legal-back:hover { text-decoration: underline; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: var(--slate-800);
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 0.75rem 1rem; }
+    .nav-links { gap: 1rem; }
+    .nav-links a:not(.nav-cta) { display: none; }
+    .hero { padding: 7rem 1.5rem 3rem; }
+    section { padding: 4rem 1.5rem; }
+    .about-content { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .footer-bottom { flex-direction: column; gap: 0.75rem; text-align: center; }
+    .product-feature { padding: 2rem 1.5rem; }
+  }
+
+  /* ── FADE-IN ANIMATION ── */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAVIGATION ── -->
+<nav>
+  <div class="nav-brand">Divine<span>Impact</span></div>
+  <div class="nav-links">
+    <a href="#products">Products</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+    <a href="https://shopclawmart.com" class="nav-cta" target="_blank" rel="noopener">Shop on ClawMart</a>
+  </div>
+</nav>
+
+<!-- ── MAIN CONTENT WRAPPER ── -->
+<div id="main-content">
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-tag">Governance for AI Agents</div>
+  <h1>Build agents that <em>work</em>.<br>Not agents that break.</h1>
+  <p class="hero-sub">
+    Divine Impact builds production-tested governance frameworks, deployment kits, and operational guides for autonomous AI agents. Built from real systems running real workloads — not theory papers.
+  </p>
+  <div class="hero-actions">
+    <a href="https://shopclawmart.com" class="btn-primary" target="_blank" rel="noopener">Browse Our Products</a>
+    <a href="#about" class="btn-secondary">Learn More</a>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── WHAT WE DO ── -->
+<section id="products" class="fade-up">
+  <div class="section-label">What We Do</div>
+  <div class="section-title">Three ways we help you ship agents that scale</div>
+  <p class="section-desc">
+    Small and mid-size companies know they need AI but don't have the time or team to figure it out. We bridge that gap.
+  </p>
+
+  <div class="offerings">
+    <div class="offering-card">
+      <div class="offering-icon blue">⬡</div>
+      <h3>Production-Ready AI Skills</h3>
+      <p>Governance frameworks, deployment templates, and operational guides you can plug into your agent and get value from immediately. Available on ClawMart.</p>
+    </div>
+    <div class="offering-card">
+      <div class="offering-icon amber">◈</div>
+      <h3>Custom Agent Builds</h3>
+      <p>Tailored AI agents built to your company's specific operations — deployed, maintained, and improved on an ongoing basis. You get a governed system, not a prototype.</p>
+    </div>
+    <div class="offering-card">
+      <div class="offering-icon green">◇</div>
+      <h3>Educational Resources</h3>
+      <p>Guides, walkthroughs, and deep-dives on building AI systems that actually work in production. Written by operators who've made the mistakes so you don't have to.</p>
+    </div>
+  </div>
+
+  <!-- Featured Product -->
+  <div class="product-feature fade-up">
+    <h3>The Governed Agent Framework</h3>
+    <div class="price">$79 · One-time purchase on ClawMart</div>
+    <p>
+      A complete governance system for autonomous AI agents. Constitution, permissions matrix, escalation protocol, audit logging, sub-agent deployment kit, and cron orchestration guide. Every document exists because something went wrong without it.
+    </p>
+    <div class="file-list">
+      <div class="file-item">Identity & Boundary Constitution</div>
+      <div class="file-item">Permitted Actions Matrix</div>
+      <div class="file-item">Escalation Protocol</div>
+      <div class="file-item">Audit Log Specification</div>
+      <div class="file-item">Sub-Agent Assignment Brief Template</div>
+      <div class="file-item">Two Real Assignment Brief Examples</div>
+      <div class="file-item">Cron Orchestration Guide</div>
+      <div class="file-item">Quick Start README</div>
+    </div>
+    <a href="https://shopclawmart.com" class="btn-primary" target="_blank" rel="noopener">View on ClawMart</a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── PROOF ── -->
+<section class="fade-up">
+  <div class="section-label">Built in Production</div>
+  <div class="section-title">Not theory. Not templates. Tested infrastructure.</div>
+  <p class="section-desc">
+    Everything we sell was built for and tested on a live production agent system running 24/7 with real business objectives and real consequences.
+  </p>
+  <div class="proof-grid">
+    <div class="proof-item">
+      <div class="proof-number">3</div>
+      <div class="proof-label">Sub-agents deployed<br>and managed in production</div>
+    </div>
+    <div class="proof-item">
+      <div class="proof-number">4,800</div>
+      <div class="proof-label">Backtest simulations<br>per weekly cycle</div>
+    </div>
+    <div class="proof-item">
+      <div class="proof-number">24/7</div>
+      <div class="proof-label">Autonomous operations<br>with daily cron jobs</div>
+    </div>
+    <div class="proof-item">
+      <div class="proof-number">v1.3</div>
+      <div class="proof-label">Current constitution version<br>— iterated from real incidents</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── ABOUT ── -->
+<section id="about" class="fade-up">
+  <div class="section-label">About</div>
+  <div class="section-title">Who we are</div>
+
+  <div class="about-content">
+    <div class="about-text">
+      <p>
+        Divine Impact is a small, focused operation that builds governance infrastructure for autonomous AI agents.
+      </p>
+      <p>
+        We're not a hype shop. We're operators who run production AI systems every day and package what we learn into tools other people can use. Our governance framework wasn't designed in a brainstorm — it was built one hard lesson at a time, from credential exposure incidents to sub-agent deployment failures.
+      </p>
+      <p>
+        We believe the difference between an AI agent that works and one that breaks is governance — clear rules about what it can do, what it can't, how it escalates, and how you stay in control as it scales.
+      </p>
+    </div>
+
+    <div id="contact" class="about-details">
+      <h4>Contact & Details</h4>
+      <div class="detail-row">
+        <span class="detail-label">Email</span>
+        <span class="detail-value"><a href="mailto:team@divineimpact.io">team@divineimpact.io</a></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Twitter / X</span>
+        <span class="detail-value"><a href="https://x.com/divineimpact77" target="_blank" rel="noopener">@divineimpact77</a></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Marketplace</span>
+        <span class="detail-value"><a href="https://shopclawmart.com" target="_blank" rel="noopener">ClawMart</a></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Location</span>
+        <span class="detail-value">South Portland, Maine</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Founded</span>
+        <span class="detail-value">2026</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- end #main-content -->
+
+<!-- ── LEGAL SECTIONS (hidden by default) ── -->
+<div id="terms-section" class="legal-section">
+  <a href="#" class="legal-back" onclick="showMain(); return false;">← Back to home</a>
+  <h2>Terms of Service</h2>
+  <p class="legal-updated">Last updated: March 29, 2026</p>
+
+  <h3>1. Overview</h3>
+  <p>These Terms of Service govern your purchase and use of digital products sold by Divine Impact ("we," "us," "our") through the ClawMart marketplace and any other distribution channels we use. By purchasing a product, you agree to these terms.</p>
+
+  <h3>2. Products & Delivery</h3>
+  <p>We sell digital products including governance frameworks, deployment kits, templates, and educational guides for AI agent systems. All products are delivered electronically through the ClawMart marketplace immediately upon purchase. Products are provided as downloadable files.</p>
+
+  <h3>3. License</h3>
+  <p>Upon purchase, you receive a non-exclusive, non-transferable license to use the product for your own personal or business purposes. You may customize the files for your own use. You may not resell, redistribute, or share the files with anyone outside your immediate team or organization.</p>
+
+  <h3>4. Refund Policy</h3>
+  <p>Because our products are digital files delivered immediately upon purchase, all sales are final. If you experience a technical issue with your download, contact us at team@divineimpact.io and we'll resolve it promptly. If a product is materially different from its description, we will issue a full refund within 14 days of purchase.</p>
+
+  <h3>5. Disclaimer</h3>
+  <p>Our products provide governance frameworks and templates for AI agent systems. They are provided "as is" and do not constitute legal, financial, or professional advice. You are responsible for customizing and implementing these frameworks for your specific use case. We make no guarantees about specific outcomes from using our products.</p>
+
+  <h3>6. Limitation of Liability</h3>
+  <p>To the maximum extent permitted by law, Divine Impact shall not be liable for any indirect, incidental, or consequential damages arising from the use of our products. Our total liability for any claim shall not exceed the amount you paid for the product.</p>
+
+  <h3>7. Updates</h3>
+  <p>We may update purchased products from time to time. Updated versions are provided free of charge to existing buyers when distributed through the same ClawMart listing. We reserve the right to modify these terms with notice posted on this page.</p>
+
+  <h3>8. Contact</h3>
+  <p>For any questions about these terms, contact us at <a href="mailto:team@divineimpact.io" style="color: var(--accent);">team@divineimpact.io</a>.</p>
+</div>
+
+<div id="privacy-section" class="legal-section">
+  <a href="#" class="legal-back" onclick="showMain(); return false;">← Back to home</a>
+  <h2>Privacy Policy</h2>
+  <p class="legal-updated">Last updated: March 29, 2026</p>
+
+  <h3>1. What We Collect</h3>
+  <p>When you purchase a product through ClawMart, your transaction is processed by ClawMart and Stripe. We receive your name, email address, and purchase details so we can deliver your product and provide support. We do not collect payment card information directly — that is handled entirely by Stripe.</p>
+
+  <h3>2. How We Use Your Information</h3>
+  <p>We use your information to deliver purchased products, provide customer support, send product updates to existing buyers, and improve our products based on aggregate usage patterns. We do not sell, rent, or share your personal information with third parties for marketing purposes.</p>
+
+  <h3>3. Third-Party Services</h3>
+  <p>We use the following third-party services:</p>
+  <ul>
+    <li>ClawMart — marketplace and product delivery</li>
+    <li>Stripe — payment processing</li>
+  </ul>
+  <p>Each service has its own privacy policy governing how they handle your data.</p>
+
+  <h3>4. Data Retention</h3>
+  <p>We retain your purchase information for as long as needed to provide product support and updates. You can request deletion of your data by contacting us at team@divineimpact.io.</p>
+
+  <h3>5. Security</h3>
+  <p>We take reasonable measures to protect your information. Payment processing is handled entirely by Stripe's secure infrastructure. We do not store payment credentials.</p>
+
+  <h3>6. Your Rights</h3>
+  <p>You may request access to, correction of, or deletion of your personal data at any time by emailing team@divineimpact.io. We will respond within 30 days.</p>
+
+  <h3>7. Changes</h3>
+  <p>We may update this policy as our practices evolve. Changes will be posted on this page with an updated date.</p>
+
+  <h3>8. Contact</h3>
+  <p>For privacy questions, contact us at <a href="mailto:team@divineimpact.io" style="color: var(--accent);">team@divineimpact.io</a>.</p>
+</div>
+
+<div id="refund-section" class="legal-section">
+  <a href="#" class="legal-back" onclick="showMain(); return false;">← Back to home</a>
+  <h2>Refund Policy</h2>
+  <p class="legal-updated">Last updated: March 29, 2026</p>
+
+  <h3>Digital Products</h3>
+  <p>All Divine Impact products are digital files delivered immediately upon purchase. Because of the nature of digital delivery, all sales are generally final.</p>
+
+  <h3>When We Issue Refunds</h3>
+  <ul>
+    <li>The product is materially different from its listing description</li>
+    <li>Files are corrupted or missing from the download</li>
+    <li>A technical issue prevents you from accessing the product and we cannot resolve it</li>
+  </ul>
+
+  <h3>How to Request a Refund</h3>
+  <p>Email <a href="mailto:team@divineimpact.io" style="color: var(--accent);">team@divineimpact.io</a> within 14 days of purchase with your order details and a description of the issue. We'll respond within 48 hours.</p>
+
+  <h3>Product Updates</h3>
+  <p>If you're unsatisfied with the current version of a product, we encourage you to reach out before requesting a refund. We actively improve our products based on customer feedback and may be able to address your concern in an upcoming update.</p>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">Divine<span>Impact</span></div>
+      <p class="footer-tagline">Governance infrastructure for autonomous AI agents. Built by operators, for operators.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Products</h5>
+      <a href="https://shopclawmart.com" target="_blank" rel="noopener">ClawMart Store</a>
+      <a href="#products">Governed Agent Framework</a>
+      <a href="#products">Custom Builds</a>
+    </div>
+    <div class="footer-col">
+      <h5>Connect</h5>
+      <a href="mailto:team@divineimpact.io">team@divineimpact.io</a>
+      <a href="https://x.com/divineimpact77" target="_blank" rel="noopener">Twitter / X</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 Divine Impact. All rights reserved.</span>
+    <div class="footer-legal">
+      <a href="#" onclick="showLegal('terms'); return false;">Terms of Service</a>
+      <a href="#" onclick="showLegal('privacy'); return false;">Privacy Policy</a>
+      <a href="#" onclick="showLegal('refund'); return false;">Refund Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── Legal page toggle ──
+  function showLegal(page) {
+    document.getElementById('main-content').style.display = 'none';
+    document.querySelectorAll('.legal-section').forEach(s => s.classList.remove('active'));
+    document.getElementById(page + '-section').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function showMain() {
+    document.querySelectorAll('.legal-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('main-content').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Fade-in on scroll ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
