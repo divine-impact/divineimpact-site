@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silas Walkthrough — DivineImpact</title>
+<meta name="description" content="Six short videos walking through a live, governed, two-objective self-hosted AI agent. ~30 minutes total.">
+<meta name="author" content="DivineImpact">
+<meta property="og:title" content="Silas Walkthrough — A Governed Self-Hosted Agent in Operation">
+<meta property="og:description" content="Six short videos, ~30 minutes total. The governance stack, the sub-agents, the cron schedule, the dashboard.">
+<meta property="og:type" content="article">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    font-size: 16px;
+    color: #1a1a1a;
+    background: #f4f6f8;
+    padding: 40px 20px;
+    line-height: 1.6;
+  }
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 50px 60px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+  }
+
+  .doc-header {
+    text-align: right;
+    font-size: 11px;
+    color: #8a9bad;
+    border-bottom: 2px solid #2e6da4;
+    padding-bottom: 8px;
+    margin-bottom: 36px;
+    letter-spacing: 0.5px;
+  }
+
+  .cover {
+    background: #1b3a5c;
+    padding: 60px 40px;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .cover h1 {
+    font-size: 38px;
+    color: #ffffff;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+    line-height: 1.2;
+    font-weight: bold;
+  }
+  .cover .subtitle {
+    font-size: 18px;
+    color: #d6e8f7;
+    margin-bottom: 18px;
+    font-weight: normal;
+    line-height: 1.4;
+  }
+  .cover .meta {
+    font-size: 12px;
+    color: #8a9bad;
+    font-style: italic;
+    letter-spacing: 0.5px;
+  }
+
+  h2.section-title {
+    font-size: 22px;
+    color: #1b3a5c;
+    font-weight: bold;
+    margin-top: 54px;
+    margin-bottom: 22px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #2e6da4;
+    line-height: 1.3;
+  }
+
+  p {
+    font-size: 15px;
+    line-height: 1.75;
+    margin-bottom: 16px;
+    color: #1a1a1a;
+  }
+
+  p strong { color: #1b3a5c; }
+
+  .intro-callout {
+    background: #d6e8f7;
+    border-left: 4px solid #2e6da4;
+    padding: 22px 28px;
+    margin: 24px 0 40px;
+    border-radius: 3px;
+  }
+  .intro-callout p { margin-bottom: 10px; font-size: 15px; }
+  .intro-callout p:last-child { margin-bottom: 0; }
+
+  .video-part {
+    margin: 36px 0;
+    padding: 26px 28px;
+    background: #f8fafb;
+    border-left: 4px solid #2e6da4;
+    border-radius: 3px;
+  }
+  .video-part .part-label {
+    font-size: 12px;
+    color: #2e6da4;
+    font-weight: bold;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .video-part h3 {
+    font-size: 19px;
+    color: #1b3a5c;
+    font-weight: bold;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .video-part .duration {
+    font-size: 12.5px;
+    color: #8a9bad;
+    font-style: italic;
+    margin-bottom: 14px;
+    letter-spacing: 0.3px;
+  }
+  .video-part .description {
+    font-size: 14.5px;
+    color: #1a1a1a;
+    margin-bottom: 18px;
+    line-height: 1.7;
+  }
+
+  .loom-embed {
+    position: relative;
+    padding-bottom: 62.5%;
+    height: 0;
+    margin-top: 8px;
+    background: #000;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .loom-embed iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .watch-button {
+    display: inline-block;
+    padding: 12px 26px;
+    background: #2e6da4;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    border-radius: 3px;
+    transition: background 0.2s;
+  }
+  .watch-button:hover { background: #3e82c0; }
+  .watch-button::after { content: " →"; }
+
+  .cta-section {
+    margin: 50px 0 20px;
+    padding: 28px 32px;
+    background: #1b3a5c;
+    border-radius: 4px;
+    text-align: center;
+  }
+  .cta-section h3 {
+    color: #ffffff;
+    font-size: 18px;
+    margin-bottom: 12px;
+    font-weight: bold;
+  }
+  .cta-section p {
+    color: #d6e8f7;
+    font-size: 14.5px;
+    margin-bottom: 18px;
+  }
+  .cta-button {
+    display: inline-block;
+    padding: 14px 32px;
+    background: #c8962e;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    border-radius: 3px;
+    transition: background 0.2s;
+    margin: 4px 6px;
+  }
+  .cta-button:hover { background: #d9a33d; }
+  .cta-button.secondary {
+    background: transparent;
+    border: 2px solid #d6e8f7;
+    padding: 12px 30px;
+  }
+  .cta-button.secondary:hover { background: #2e6da4; border-color: #2e6da4; }
+
+  .doc-footer {
+    text-align: center;
+    font-size: 12px;
+    color: #8a9bad;
+    border-top: 1px solid #dde3ea;
+    padding-top: 24px;
+    margin-top: 50px;
+    letter-spacing: 0.3px;
+    font-style: italic;
+    line-height: 1.6;
+  }
+  .doc-footer a { color: #2e6da4; text-decoration: none; }
+  .doc-footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 640px) {
+    body { padding: 20px 10px; }
+    .page { padding: 30px 24px; }
+    .cover { padding: 40px 24px; }
+    .cover h1 { font-size: 26px; }
+    .cover .subtitle { font-size: 15px; }
+    h2.section-title { font-size: 19px; }
+    .video-part { padding: 20px 22px; }
+    .video-part h3 { font-size: 17px; }
+    .cta-section { padding: 22px 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="doc-header">DIVINEIMPACT &nbsp;|&nbsp; SILAS WALKTHROUGH &nbsp;|&nbsp; APRIL 2026</div>
+
+  <div class="cover">
+    <h1>SILAS<br>WALKTHROUGH</h1>
+    <div class="subtitle">A governed, self-hosted, two-objective agent in operation</div>
+    <div class="meta">Six short videos &nbsp;·&nbsp; ~30 minutes total &nbsp;·&nbsp; April 2026</div>
+  </div>
+
+  <div class="intro-callout">
+    <p><strong>What you're about to watch.</strong> A real self-hosted agent running a live trading advisory pipeline and a digital product business. Governance documents, sub-agents, cron schedule, dashboard — the whole stack, nothing staged.</p>
+    <p>Watch in order for the full picture, or jump to the section you need. Voice-over only, no on-camera hype.</p>
+  </div>
+
+  <h2 class="section-title">Part 1 — The Setup</h2>
+
+  <div class="video-part">
+    <div class="part-label">Part 1 of 6</div>
+    <h3>Governed Trading Agent Setup</h3>
+    <div class="duration">5 minutes</div>
+    <p class="description">What Silas actually is, how the two objectives fit together, and why governance comes before code.</p>
+    <div class="loom-embed">
+      <iframe src="https://www.loom.com/embed/f62b99d6d9ab4399a996d72b5c6db2b1" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div class="video-part">
+    <div class="part-label">Part 2 of 6</div>
+    <h3>PAM, Escalation, and Audit Logs</h3>
+    <div class="duration">5 minutes</div>
+    <p class="description">The three governance documents that keep an autonomous agent from doing something stupid with your money or your brand.</p>
+    <div class="loom-embed">
+      <iframe src="https://www.loom.com/embed/b9ab122c9c91462da7303d1384f61875" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div class="video-part">
+    <div class="part-label">Part 3 of 6</div>
+    <h3>Inside OpenClaw Agent Governance</h3>
+    <div class="duration">5 minutes</div>
+    <p class="description">The six workspace files Silas reads on every wake-up. Identity, values, tools, memory — the architecture visible.</p>
+    <div class="loom-embed">
+      <iframe src="https://www.loom.com/embed/858e02f032dc412db4edf893a9884734" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <h2 class="section-title">Part 2 — The System in Motion</h2>
+
+  <p>The next three videos open in a new tab. By now you have the shape of the governance layer — these show it operating.</p>
+
+  <div class="video-part">
+    <div class="part-label">Part 4 of 6</div>
+    <h3>Sub-Agents: Chip and Sebastian</h3>
+    <div class="duration">5 minutes</div>
+    <p class="description">Chip pulls data every Friday night. Sebastian runs 4,800 backtests every Saturday morning. What a well-scoped sub-agent looks like, and why the ability to say <em>no</em> matters more than the ability to say yes.</p>
+    <a class="watch-button" href="https://www.loom.com/share/4826b82a79c34d61821649c933206d9b" target="_blank" rel="noopener">Watch Part 4</a>
+  </div>
+
+  <div class="video-part">
+    <div class="part-label">Part 5 of 6</div>
+    <h3>How Silas Cron Jobs Run Daily</h3>
+    <div class="duration">5 minutes</div>
+    <p class="description">Nine cron jobs. One daily market read. Four intraday pulls. Nightly consolidation with a backup. The whole operational footprint is 15 minutes of Telegram per day.</p>
+    <a class="watch-button" href="https://www.loom.com/share/313e8c89b91745819ed4b13a5799cd56" target="_blank" rel="noopener">Watch Part 5</a>
+  </div>
+
+  <div class="video-part">
+    <div class="part-label">Part 6 of 6</div>
+    <h3>Dashboard in MyClaw</h3>
+    <div class="duration">5 minutes</div>
+    <p class="description">The operator's-eye view. Where you actually sit when this is running — what you check, what you ignore, and what tells you something's wrong.</p>
+    <a class="watch-button" href="https://www.loom.com/share/5acb44ce265d4e9d8d9918d5ff470dc9" target="_blank" rel="noopener">Watch Part 6</a>
+  </div>
+
+  <div class="cta-section">
+    <h3>Want the full operator's playbook?</h3>
+    <p>The governance documents, the cron recipes, the security hardening guide, and the sub-agent deployment workbook — everything needed to stand your own up.</p>
+    <a class="cta-button" href="https://bit.ly/governed-agents" target="_blank" rel="noopener">Get the Framework</a>
+    <a class="cta-button secondary" href="https://bit.ly/di-manifesto" target="_blank" rel="noopener">Read the Manifesto</a>
+  </div>
+
+  <div class="cta-section" style="background:#fff3cd; border-left: 4px solid #c8962e;">
+    <h3 style="color:#8a6a1f;">Through June 7: free in exchange for real feedback</h3>
+    <p style="color:#1a1a1a;">Email <a href="mailto:team@divineimpact.io" style="color:#8a6a1f; font-weight:bold; text-decoration:none;">team@divineimpact.io</a> and we'll send you the full bundle in exchange for a 15-minute conversation about where it breaks for you. Your feedback is worth more to us than revenue right now.</p>
+  </div>
+
+  <div class="doc-footer">
+    DivineImpact &nbsp;·&nbsp; April 2026 &nbsp;·&nbsp; <a href="https://divineimpact.io">divineimpact.io</a><br>
+    Questions: <a href="mailto:team@divineimpact.io">team@divineimpact.io</a>
+  </div>
+
+</div>
+</body>
+</html>
